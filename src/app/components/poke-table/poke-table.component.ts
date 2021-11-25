@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { PokemonService } from 'src/app/services/pokemon.service';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import {MatDialog, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { PokeDetailComponent } from '../poke-detail/poke-detail.component';
+
 
 @Component({
   selector: 'app-poke-table',
@@ -19,7 +21,7 @@ export class PokeTableComponent implements OnInit {
 
   pokemons = [];
 
-  constructor(private pokemonService: PokemonService, private router: Router) { }
+  constructor(private pokemonService: PokemonService,public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.getPokemons();
@@ -48,15 +50,12 @@ export class PokeTableComponent implements OnInit {
     }
   }
 
-  //Filtro para el paginador
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  popUp(row: { position: any; }){
+    this.dialog.open(PokeDetailComponent, {
+      data: {id:row.position},
+    });
   }
-
-  getRow(row: { position: any; }){
-    //console.log(row);
-    this.router.navigateByUrl(`/pokeDetail/${row.position}`)
-  }
-
 }
+
+
+
